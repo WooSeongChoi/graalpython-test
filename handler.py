@@ -6,6 +6,7 @@ import logging
 from datetime import timezone, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
+import pytz
 import httpx
 
 from config import logger_name, watchdog_url, max_chance
@@ -15,7 +16,8 @@ class HTTPStatusWatchdog:
     _instance: HTTPStatusWatchdog | None = None
 
     def __init__(self):
-        self.scheduler: BackgroundScheduler = BackgroundScheduler(daemon=True, timezone=timezone(timedelta(hours=9)))
+        tz_seoul = pytz.timezone('Asia/Seoul')
+        self.scheduler: BackgroundScheduler = BackgroundScheduler(daemon=True, timezone=tz_seoul)
         self.close_event: threading.Event = threading.Event()
         self.chance: int = max_chance
         self.logger = logging.getLogger(logger_name)
