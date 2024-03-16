@@ -3,6 +3,7 @@ import os
 from signal import SIGABRT
 import threading
 import logging
+from datetime import timezone, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import httpx
@@ -14,7 +15,7 @@ class HTTPStatusWatchdog:
     _instance: HTTPStatusWatchdog | None = None
 
     def __init__(self):
-        self.scheduler: BackgroundScheduler = BackgroundScheduler(daemon=True)
+        self.scheduler: BackgroundScheduler = BackgroundScheduler(daemon=True, timezone=timezone(timedelta(hours=9)))
         self.close_event: threading.Event = threading.Event()
         self.chance: int = max_chance
         self.logger = logging.getLogger(logger_name)
